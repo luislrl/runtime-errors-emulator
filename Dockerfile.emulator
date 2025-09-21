@@ -1,0 +1,22 @@
+# Build (Compilação)
+FROM gcc:latest AS builder
+
+WORKDIR /app
+RUN mkdir bin
+COPY src/ .
+
+# Compila
+RUN for f in *.cpp; do g++ "$f" -static -o "bin/${f%.cpp}"; done
+
+# Execução
+FROM debian:stable-slim
+
+WORKDIR /app
+COPY --from=builder /app/bin/ .
+
+# COPIA O SCRIPT para dentro da imagem
+COPY error_emulator.sh .
+# PERMISSÃO DE EXECUÇÃO para o script
+RUN chmod +x error_emulator.sh
+
+CMD ["./error_emulator.sh"]

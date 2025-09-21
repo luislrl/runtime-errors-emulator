@@ -22,10 +22,17 @@ all: $(EXEC)
 $(EXEC): $(OBJ_FILES)
 	$(CXX) $(CXXFLAGS) -o $@ $^
 
+# Adiciona o diretório de objetos como uma dependência de ordem (order-only).
+# Isso garante que o diretório seja criado antes de qualquer compilação.
+$(OBJ_FILES): | $(OBJ_DIR)
+
 # Compilação de cada .cpp em .o
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
-	@if not exist $(OBJ_DIR) mkdir $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Regra para criar o diretório de objetos, se ele não existir
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 # Limpeza
 clean:
