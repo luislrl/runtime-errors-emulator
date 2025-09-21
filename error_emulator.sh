@@ -24,11 +24,15 @@ while true; do
             break
             ;;
         *)
-            INDEX=$((ESCOLHA-1))
-            if [ -n "${ERRORS[$INDEX]}" ]; then
-                EXECUTAVEL="${ERRORS[$INDEX]}"
-                echo "=== Executando '$EXECUTAVEL' ==="
-                ./"$EXECUTAVEL"
+            if [[ "$ESCOLHA" =~ ^[0-9]+$ ]]; then
+                INDEX=$((ESCOLHA-1))
+                if [ -n "${ERRORS[$INDEX]}" ]; then
+                    EXECUTAVEL="${ERRORS[$INDEX]}"
+                    echo "=== Executando '$EXECUTAVEL' ==="
+                    ./"$EXECUTAVEL"
+                else
+                    echo "Opção inválida."
+                fi
             else
                 echo "Opção inválida."
             fi
