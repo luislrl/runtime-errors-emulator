@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <chrono>
+#include <thread>
 
 int main() {
     long long megabytes_vazados = 0;
@@ -30,8 +31,7 @@ int main() {
 
     }
 
-    printf("\nO programa não consegue mais alocar memória. Encerrando em 10 segundos...\n");
-    sleep(10);
+    std::this_thread::sleep_for(std::chrono::seconds(10));
 
     return 0;
 }

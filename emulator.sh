@@ -1,5 +1,4 @@
 #!/bin/bash
-
 ERRORS=(
     "buffer_overflow"
     "core_dumped"
@@ -18,6 +17,7 @@ while true; do
     done
     echo "   q) Sair"
     read -p "Sua escolha: " ESCOLHA
+    echo
     
     case "$ESCOLHA" in
         q|Q)
@@ -29,12 +29,14 @@ while true; do
                 if [ -n "${ERRORS[$INDEX]}" ]; then
                     EXECUTAVEL="${ERRORS[$INDEX]}"
                     echo "=== Executando '$EXECUTAVEL' ==="
+                    echo
                     ./"$EXECUTAVEL"
                 else
                     echo "Opção inválida."
                 fi
             else
                 echo "Opção inválida."
+                echo
             fi
             read -p "Pressione Enter para continuar..."
             ;;
