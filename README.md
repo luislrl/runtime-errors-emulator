@@ -52,7 +52,7 @@ Este modo é ideal para executar erros específicos de forma rápida e isolada.
 1.  **Execute o script:**
 
     ```bash
-    docker run --rm error_emulator ./deadlock
+    docker run --rm -it error_emulator ./deadlock
     ```
 
 ### Modo 2: Usando o Menu Interativo no Contêiner
@@ -66,3 +66,52 @@ Este modo inicia um único contêiner que permanece ativo, permitindo que você 
     O menu aparecerá imediatamente, sendo executado de dentro do próprio contêiner. Para parar a simulação e o contêiner, escolha a opção `q` no menu.
 
 -----
+
+### Modo 3: Fluxo de Trabalho Automatizado (All-in-One)
+
+Este modo é a forma mais simples e profissional de executar a demonstração completa de erros que exigem permissões especiais, como o `core_dumped`. Ele automatiza a construção e a execução do contêiner, além da configuração interna necessária, em um único comando.
+
+#### O Script "run.sh"
+
+[cite\_start]O script `run.sh` automatiza todo o processo[cite: 1]:
+
+```bash
+# este é o script que automatiza todo o processo.
+
+# --- etapa 1: Construir a Imagem Docker ---
+# o script primeiro garante que a imagem 'emulator' está construída e atualizada.
+echo "--> Etapa 1/2: Construindo/Verificando a imagem Docker 'emulator'..."
+docker build -f Dockerfile.emulator -t error_emulator . > /dev/null
+
+# verifica se a construção da imagem falhou
+if [ $? -ne 0 ]; then
+    echo "ERRO: A construção da imagem Docker falhou. Abortando."
+    exit 1
+fi
+
+# --- etapa 2: executar o contêiner com todos os comandos necessários ---
+# agora, ele inicia o contêiner e passa uma única "super-string" de comandos
+# para serem executados lá dentro, em ordem.
+echo "--> Etapa 2/2: Iniciando o contêiner e o emulador..."
+docker run -it --rm --privileged error_emulator bash -c " \
+    echo 'core' > /proc/sys/kernel/core_pattern && \
+    ulimit -c unlimited && \
+    ./emulator.sh \
+"
+
+echo "--> Emulador finalizado."
+```
+
+#### Como Usar este Modo
+
+1.  [cite\_start]Dê permissão de execução ao script `run.sh`[cite: 1]: `chmod +x run.sh`
+2.  [cite\_start]Execute o script para rodar o contêiner[cite: 1]: `./run.sh`
+
+#### Verificação do Core Dump
+
+[cite\_start]Para verificar a criação do arquivo `core` após a falha, siga estes passos em um segundo terminal (PowerShell, por exemplo)[cite: 1]:
+
+  * Liste os contêineres em execução: `docker ps`
+  * Pegue o ID do seu contêiner.
+  * Entre no contêiner usando o ID obtido: `docker exec -it <ID_DO_CONTAINER> bash`
+  * Dentro do contêiner, verifique a existência do arquivo `core`: `ls core`
