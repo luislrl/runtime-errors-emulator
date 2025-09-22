@@ -1,0 +1,20 @@
+{
+    "family": "emulador-task",
+    "containerDefinitions": [
+        {
+            "name": "error_emulator",
+            "image": "924609080348.dkr.ecr.us-east-2.amazonaws.com/romhenri/runtime-error-emulator:36ff7de85d25a719f9918f22593308d46444de36",
+            "cpu": 256,
+            "memory": 512,
+            "essential": true
+        }
+    ],
+    "executionRoleArn": "arn:aws:iam::924609080348:role/ecsTaskExecutionRole",
+    "taskRoleArn":"arn:aws:iam::924609080348:role/ecsTaskExecutionRole",
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "cpu": "256",
+    "memory": "512"
+}
