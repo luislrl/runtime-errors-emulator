@@ -11,12 +11,16 @@ RUN for f in *.cpp; do g++ "$f" -static -o "bin/${f%.cpp}"; done
 # Execução
 FROM debian:stable-slim
 
+# Instala dos2unix para corrigir formatação de linha do Windows
+RUN apt-get update && apt-get install -y dos2unix && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 COPY --from=builder /app/bin/ .
-
 # COPIA O SCRIPT para dentro da imagem
 COPY emulator.sh .
-# PERMISSÃO DE EXECUÇÃO para o script
+
+# CORRIGE O FORMATO DO SCRIPT e dá permissão de execução
+RUN dos2unix emulator.sh
 RUN chmod +x emulator.sh
 
 CMD ["./emulator.sh"]
