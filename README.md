@@ -10,6 +10,33 @@ O emulador pode ser usado de duas formas principais:
 
 -----
 
+## Estrutura do Projeto
+
+```
+Runtime Errors Emulator/
+├── src/
+│   ├── stack_overflow.cpp
+│   ├── segmentation_fault.cpp
+│   ├── buffer_overflow.cpp
+│   ├── memory_leak.cpp
+│   ├── race_condition.cpp
+│   ├── deadlock.cpp
+│   └── core_dump.cpp
+├── Dockerfile.emulator
+├── emulator.sh
+├── run.sh
+├── Makefile
+└── README.md
+```
+
+> `task-definition.json` e `.github` são parte da Github Action.
+
+> `.gitignore` e `.vscode` são, respectivamente, para versionamento git e configuração do VS Code.
+
+> `Dockerfile.script` serve apenas para execução alternativa em container local e script direto.
+
+-----
+
 ## Pré-requisitos
 
   * [Docker](https://www.docker.com/products/docker-desktop/) instalado e em execução.
@@ -22,17 +49,7 @@ O emulador pode ser usado de duas formas principais:
 
 Antes de executar, você precisa construir a imagem Docker. Escolha o modo de operação que deseja usar.
 
-### Modo 1: Script no Host
-
-Esta imagem contém apenas os programas compilados. O script `error_emulator.sh` no seu computador irá gerenciá-la.
-
-```bash
-docker build -t meus-programas-cpp .
-```
-
-*(Este comando usa o `Dockerfile` padrão)*
-
-### Modo 2: Menu Interativo no Contêiner
+### Modo: Menu Interativo no Contêiner
 
 Esta imagem contém os programas compilados e também o script de menu, que é definido como o ponto de entrada principal.
 
@@ -47,17 +64,7 @@ docker build -f Dockerfile.emulator -t error_emulator .
 
 ## Execução e Uso
 
-### Modo 1: Usando o Script no Host
-
-Este modo é ideal para executar erros específicos de forma rápida e isolada, sem o menu.
-
-1.  **Execute o erro desejado:**
-    ```bash
-    docker run --rm -it error_emulator ./deadlock
-    ```
-    *(Substitua `./deadlock` pelo executável do erro que deseja testar)*
-
-### Modo 2: Usando o Menu Interativo no Contêiner
+### Modo 1: Usando o Menu Interativo no Contêiner
 Este modo é para quem deseja iniciar o contêiner manualmente. É útil para entender os passos que o script `run.sh` automatiza.
 
 1.  **Inicie o contêiner com as configurações necessárias:**
@@ -74,7 +81,7 @@ Este modo é para quem deseja iniciar o contêiner manualmente. É útil para en
 
 -----
 
-### Modo 3: Fluxo de Trabalho Automatizado (All-in-One)
+### Modo 2: Fluxo de Trabalho Automatizado (All-in-One)
 
 Este modo é a forma mais simples e profissional de executar a demonstração completa de erros que exigem permissões especiais, como o `core_dumped`. Ele automatiza a construção e a execução do contêiner, além da configuração interna necessária, em um único comando.
 
@@ -144,9 +151,9 @@ Este projeto foi desenvolvido em equipe, com as seguintes responsabilidades:
 
 * **Rômulo Duarte:**
     * Implementação do `segmentation_fault`
-    * Estruturação de pastas do projeto
+    * Criação do menu CLI `emulator.sh`
     * Configuração do ambiente Docker (`Dockerfile`)
-    * Criação do menu
+    * Estruturação de pastas do projeto
 
 * **Luís & Rômulo:**
     * Configuração do pipeline de CI/CD (GitHub Actions e AWS)
