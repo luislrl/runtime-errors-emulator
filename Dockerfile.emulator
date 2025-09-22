@@ -15,8 +15,8 @@ WORKDIR /app
 COPY --from=builder /app/bin/ .
 
 # COPIA O SCRIPT para dentro da imagem
-COPY error_emulator.sh .
+COPY emulator.sh .
 # PERMISSÃO DE EXECUÇÃO para o script
-RUN chmod +x error_emulator.sh
+RUN chmod +x emulator.sh
 
-CMD ["./error_emulator.sh"]
+CMD ["./emulator.sh"]
