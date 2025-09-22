@@ -9,6 +9,7 @@
             "essential": true
         }
     ],
+    "executionRoleArn": "arn:aws:iam::924609080348:role/ecsTaskExecutionRole",
     "requiresCompatibilities": [
         "FARGATE"
     ],
