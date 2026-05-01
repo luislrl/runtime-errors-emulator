@@ -1,6 +1,8 @@
 #include <iostream>
-#include <csignal>
+#include <signal.h>
 #include <cstdlib>
+#include <cstring> // Adiciona para sigemptyset
+#include <sys/types.h>
 
 // aloca memória para a pilha de emergência (tamanho recomendado pelo sistema).
 static char* alternate_stack = new char[SIGSTKSZ];

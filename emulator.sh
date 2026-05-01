@@ -1,5 +1,6 @@
 #!/bin/bash
 
+TOP_MARGIN=6
 BLUE='\033[36m'
 NC='\033[0m'
 
@@ -34,17 +35,80 @@ ERRORS=(
     "stack_overflow"
 )
 
+visible_len() {
+    local line="$1"
+
+    line=$(echo -e "$line" | sed -E 's/\x1B\[[0-9;]*[mK]//g')
+
+    printf "%s" "$line" | wc -m
+}
+
+get_max_width() {
+    local text="$1"
+    local max=0
+
+    while IFS= read -r line; do
+        local len
+        len=$(visible_len "$line")
+
+        if (( len > max )); then
+            max=$len
+        fi
+    done <<< "$text"
+
+    echo "$max"
+}
+
+get_left_padding() {
+    local text="$1"
+    local terminal_width
+    local text_width
+    local padding
+
+    terminal_width=$(tput cols)
+    text_width=$(get_max_width "$text")
+
+    padding=$(( (terminal_width - text_width) / 2 ))
+
+    if (( padding < 0 )); then
+        padding=0
+    fi
+
+    echo "$padding"
+}
+
+print_with_padding() {
+    local text="$1"
+    local padding="$2"
+
+    while IFS= read -r line; do
+        printf "%*s%b\n" "$padding" "" "$line"
+    done <<< "$text"
+}
+
 while true; do
-    clear 
-    echo -e "${BLUE}${asciiart}${NC}"
-    echo
-    for i in "${!ERRORS[@]}"; do
-        printf "   %2d) %s\n" "$((i+1))" "${ERRORS[$i]}"
+    clear
+
+    for ((i = 0; i < TOP_MARGIN; i++)); do
+        echo
     done
-    echo "    q) Sair"
-    read -p "Sua escolha: " ESCOLHA
+
+    PADDING=$(get_left_padding "$asciiart")
+
+    print_with_padding "${BLUE}${asciiart}${NC}" "$PADDING"
     echo
-    
+
+    for i in "${!ERRORS[@]}"; do
+        printf "%*s%2d) %s\n" "$PADDING" "" "$((i+1))" "${ERRORS[$i]}"
+    done
+
+    printf "%*s q) Sair\n" "$PADDING" ""
+    echo
+
+    printf "%*sSua escolha: " "$PADDING" ""
+    read -r ESCOLHA
+    echo
+
     case "$ESCOLHA" in
         q|Q)
             break
@@ -52,19 +116,24 @@ while true; do
         *)
             if [[ "$ESCOLHA" =~ ^[0-9]+$ ]]; then
                 INDEX=$((ESCOLHA-1))
+
                 if [ -n "${ERRORS[$INDEX]}" ]; then
                     EXECUTAVEL="${ERRORS[$INDEX]}"
-                    echo "=== Executando '$EXECUTAVEL' ==="
+
+                    printf "%*s=== Executando '%s' ===\n" "$PADDING" "" "$EXECUTAVEL"
                     echo
                     ./"$EXECUTAVEL"
                 else
-                    echo "Opção inválida."
+                    printf "%*sOpção inválida.\n" "$PADDING" ""
                 fi
             else
-                echo "Opção inválida."
+                printf "%*sOpção inválida.\n" "$PADDING" ""
                 echo
             fi
-            read -p "Pressione Enter para continuar..."
+
+            echo
+            printf "%*sPressione Enter para continuar..." "$PADDING" ""
+            read -r
             ;;
     esac
 done
