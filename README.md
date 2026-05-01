@@ -131,29 +131,3 @@ Para verificar a criação do arquivo `core` após a falha, siga estes passos em
   * Dentro do contêiner, verifique a existência do arquivo `core`: `ls core`
 
 -----
-
-## Contribuições da Equipe
-
-Este projeto foi desenvolvido em equipe, com as seguintes responsabilidades:
-
-* **Rauana Carvalho:**
-    * Implementação do `buffer_overflow`
-    * Implementação do `core_dumped`
-    * Implementação do `deadlock`
-    * Criação do script de automação (`run.sh`)
-    * Elaboração da documentação (`README.md`)
-
-* **Luís Eduardo Rocha:**
-    * Implementação do `memory_leak`
-    * Implementação do `race_condition`
-    * Implementação do `stack_overflow`
-    * Criação do repositório no GitHub
-
-* **Rômulo Duarte:**
-    * Implementação do `segmentation_fault`
-    * Criação do menu CLI `emulator.sh`
-    * Configuração do ambiente Docker (`Dockerfile`)
-    * Estruturação de pastas do projeto
-
-* **Luís & Rômulo:**
-    * Configuração do pipeline de CI/CD (GitHub Actions e AWS)
